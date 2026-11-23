@@ -1,7 +1,7 @@
 // src/common/common.js
 
 // 공통 영역 불러오기 (header, footer)
-// selector: 불러온 HTML을 삽입할 대상 요소 선택자
+// selector: 불러온 HTML을 넣을 요소 선택자
 async function loadPartial(selector, path) {
   const target = document.querySelector(selector);
 
@@ -26,7 +26,7 @@ async function loadPartial(selector, path) {
 
 const DATA_PATH = "/src/assets/data/"; // 데이터 파일 경로
 
-// fileName: 불러올 JSON 파일 이름 (예: "data.json")
+// fileName: 불러올 JSON 파일 이름 (예: "scholarships.json")
 export async function fetchJSON(fileName) {
   const response = await fetch(`${DATA_PATH}${fileName}`);
 
@@ -37,8 +37,10 @@ export async function fetchJSON(fileName) {
   return await response.json();
 }
 
-// 화면 표시용 변환 (홈, 상세, 캘린더 등에서 공통 사용)
-// value: 변환할 값 (숫자, 날짜 등)
+// 화면 표시용 변환 (홈, 장학금 목록, 장학금 상세 등에서 공통으로 쓰는 함수)
+
+// 숫자를 3자리마다 콤마(,)를 넣은 문자열로 변환
+// value: 변환할 숫자 (예: 1000000)
 export function formatNumber(value) {
   if (value === null || value === undefined) {
     return "-";
@@ -59,7 +61,8 @@ export function formatNumber(value) {
   return result;
 }
 
-// 날짜 형식 변환 (YYYY-MM-DD → YYYY.MM.DD)
+// 날짜를 YYYY.MM.DD 형식으로 변환
+// dateText: 변환할 날짜 문자열 (예: "2023-05-01")
 export function formatDate(dateText) {
   if (dateText === null || dateText === undefined) {
     return "-";
@@ -80,9 +83,48 @@ export function formatDate(dateText) {
 
 // 로그인 전/후 메뉴 전환
 
-let currentUser = null; // 로그인 상태를 나타내는 전역 변수 (null: 로그아웃 상태, 객체: 로그인 상태)
+const USER_KEY = "scholarMap:user"; // localStorage에 로그인 상태를 저장할 때 사용할 키
 
-// 로그인 상태에 따라 메뉴를 전환하는 함수
+// 로그인 상태 가져오기
+export function getUser() {
+  try {
+    const saved = localStorage.getItem(USER_KEY);
+
+    if (saved === null) {
+      return null;
+    }
+
+    return JSON.parse(saved);
+  } catch (err) {
+    return null;
+  }
+}
+
+// 로그인 상태 저장
+export function setUser(user) {
+  try {
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+  } catch (err) {
+    alert("로그인 상태를 저장하지 못했습니다.");
+    return;
+  }
+
+  updateAuthMenu();
+}
+
+// 로그아웃 처리
+export function logout() {
+  try {
+    localStorage.removeItem(USER_KEY);
+  } catch (err) {
+    alert("로그아웃 처리 중 문제가 생겼습니다.");
+    return;
+  }
+
+  updateAuthMenu();
+}
+
+// 로그인 상태에 따라 메뉴 표시
 function updateAuthMenu() {
   const loginLink = document.querySelector(".site-header__login");
   const logoutButton = document.querySelector(".site-header__logout");
@@ -91,7 +133,7 @@ function updateAuthMenu() {
     return;
   }
 
-  if (currentUser === null) {
+  if (getUser() === null) {
     loginLink.style.display = "";
     logoutButton.style.display = "none";
   } else {
@@ -100,7 +142,7 @@ function updateAuthMenu() {
   }
 }
 
-// 로그아웃 버튼 클릭 시 이벤트 처리
+// 로그아웃 버튼 클릭 이벤트 연결
 function bindLogoutButton() {
   const logoutButton = document.querySelector(".site-header__logout");
 
@@ -109,13 +151,12 @@ function bindLogoutButton() {
   }
 
   logoutButton.addEventListener("click", () => {
-    currentUser = null;
-    updateAuthMenu();
+    logout();
   });
 }
 
 // 시작
-// 공통 영역(header, footer) 불러오기, 로그인 전/후 메뉴 전환, 로그아웃 버튼 이벤트 바인딩
+// 공통 영역 불러오기, 로그인 상태 표시
 async function initCommon() {
   await loadPartial("#site-header", "/src/common/header.html");
   updateAuthMenu();
