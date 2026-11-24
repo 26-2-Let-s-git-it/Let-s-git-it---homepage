@@ -99,6 +99,70 @@ function renderList(list) {
   }
 }
 
+// 검색
+
+// 글자 배열을 검색용 글자로 합치기 (값이 없으면 빈 글자)
+// list: 글자 배열 (예: ["차상위", "한부모"])
+function listToText(list) {
+  if (list === null || list === undefined) {
+    return "";
+  }
+
+  return list.join(" ");
+}
+
+// 검색 대상 글자 만들기 (이름, 기관, 카테고리, 신청자격)
+// item: 장학금 데이터 객체
+function createSearchText(item) {
+  const text = `${item.name} ${item.organizationName} ${listToText(item.categories)} ${listToText(item.eligibilities)}`;
+
+  return text.toLowerCase();
+}
+
+// 검색어가 들어 있는 장학금만 골라내기
+// list: 장학금 목록 (배열)
+// keyword: 검색어 (예: "성적")
+function searchScholarships(list, keyword) {
+  const word = keyword.trim().toLowerCase();
+
+  if (word === "") {
+    return list;
+  }
+
+  return list.filter((item) => createSearchText(item).includes(word));
+}
+
+// 검색 결과 화면 그리기 (결과가 없으면 안내 문구와 추천 목록 표시)
+// result: 검색 결과 (배열)
+function renderSearchResult(result) {
+  const emptyMessage = document.querySelector("#scholarship-empty-message");
+
+  if (result.length === 0) {
+    renderList(allScholarships); // 추천 목록 (추천 기준이 정해지기 전까지는 전체 목록)
+    emptyMessage.style.display = "block";
+    return;
+  }
+
+  renderList(result);
+}
+
+// 검색 폼 이벤트 연결
+function bindSearchForm() {
+  const searchForm = document.querySelector("#scholarship-search-form");
+  const keywordInput = document.querySelector("#scholarship-keyword");
+
+  if (searchForm === null || keywordInput === null) {
+    return;
+  }
+
+  searchForm.addEventListener("submit", (event) => {
+    event.preventDefault(); // 페이지 새로고침 방지
+
+    const result = searchScholarships(allScholarships, keywordInput.value);
+    renderSearchResult(result);
+  });
+}
+
 // 시작
 // 장학금 목록 화면 초기화
 async function initScholarshipPage() {
@@ -107,6 +171,7 @@ async function initScholarshipPage() {
   try {
     allScholarships = await fetchJSON("scholarships.json");
     renderList(allScholarships);
+    bindSearchForm();
   } catch (err) {
     listElement.textContent = err.message;
   }
