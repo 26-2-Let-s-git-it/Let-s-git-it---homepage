@@ -1,5 +1,5 @@
 // src/pages/scholarship/scholarship.js
-// 홈 화면(장학금 목록) 전용 스크립트
+// 홈 화면(장학금 목록)과 장학금 상세 화면 스크립트
 
 import { fetchJSON, formatNumber, formatDate } from "../../common/common.js"; // 공통 영역 불러오기 (header, footer)
 
@@ -93,9 +93,9 @@ function renderList(list) {
   listElement.innerHTML = list.map((item) => createCardHTML(item)).join("");
 
   if (list.length === 0) {
-    emptyMessage.style.display = "block";
+    emptyMessage.hidden = false;
   } else {
-    emptyMessage.style.display = "none";
+    emptyMessage.hidden = true;
   }
 }
 
@@ -139,7 +139,7 @@ function renderSearchResult(result) {
 
   if (result.length === 0) {
     renderList(allScholarships); // 추천 목록 (추천 기준이 정해지기 전까지는 전체 목록)
-    emptyMessage.style.display = "block";
+    emptyMessage.hidden = false;
     return;
   }
 
@@ -163,6 +163,122 @@ function bindSearchForm() {
   });
 }
 
+// 상세
+
+// 주소(?id=3)에서 장학금 id 읽기 (없으면 null)
+function getScholarshipIdFromUrl() {
+  const params = new URLSearchParams(location.search);
+
+  return params.get("id");
+}
+
+// id가 같은 장학금 찾기 (없으면 null)
+// list: 장학금 목록 (배열)
+// id: 찾을 장학금 id (주소에서 읽은 글자)
+function findScholarshipById(list, id) {
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].id == id) {
+      return list[i];
+    }
+  }
+
+  return null;
+}
+
+// 모집 기간 표시
+// startAt: 모집 시작 날짜, endAt: 모집 마감 날짜
+function createPeriodText(startAt, endAt) {
+  const hasStart = startAt !== null && startAt !== undefined;
+  const hasEnd = endAt !== null && endAt !== undefined;
+
+  if (hasStart && hasEnd) {
+    return `${formatDate(startAt)} ~ ${formatDate(endAt)}`;
+  }
+
+  if (hasStart) {
+    return `${formatDate(startAt)} ~`;
+  }
+
+  if (hasEnd) {
+    return `~ ${formatDate(endAt)}`;
+  }
+
+  return "-";
+}
+
+// 제출 서류 목록 HTML 만들기
+// documents: 제출 서류 이름 배열 (예: ["신청서", "성적증명서"])
+function createDocumentsHTML(documents) {
+  if (documents === null || documents === undefined || documents.length === 0) {
+    return "<li>-</li>";
+  }
+
+  return documents.map((name) => `<li>${name}</li>`).join("");
+}
+
+// 공식 공고 링크 연결 (링크가 없으면 숨김)
+// applyUrl: 장학금 기관 사이트 주소
+function renderOfficialLink(applyUrl) {
+  const officialLink = document.querySelector("#scholarship-official-link");
+
+  if (applyUrl === null || applyUrl === undefined) {
+    officialLink.hidden = true;
+  } else {
+    officialLink.href = applyUrl;
+    officialLink.hidden = false;
+  }
+}
+
+// 장학금 상세 화면 그리기
+// item: 장학금 데이터 객체
+function renderDetail(item) {
+  document.querySelector("#scholarship-name").textContent = item.name;
+  document.querySelector("#scholarship-organization").textContent = item.organizationName;
+  document.querySelector("#scholarship-qualification").textContent = joinList(item.eligibilities);
+  document.querySelector("#scholarship-headcount").textContent = formatNumber(item.headcount);
+  document.querySelector("#scholarship-amount").textContent = createAmountText(item.amount);
+  document.querySelector("#scholarship-period").textContent = createPeriodText(
+    item.startAt,
+    item.endAt
+  );
+  document.querySelector("#scholarship-documents").innerHTML = createDocumentsHTML(
+    item.requiredDocuments
+  );
+
+  renderOfficialLink(item.applyUrl);
+}
+
+// 상세 화면 오류 표시 (장학금이 없거나 불러오지 못했을 때)
+function showDetailError() {
+  document.querySelector("#scholarship-detail-error").hidden = false;
+  document.querySelector("#scholarship-detail-content").hidden = true;
+}
+
+// 시작
+// 장학금 상세 화면 초기화
+async function initScholarshipDetailPage() {
+  const id = getScholarshipIdFromUrl();
+
+  if (id === null || id === "") {
+    showDetailError();
+    return;
+  }
+
+  try {
+    const list = await fetchJSON("scholarships.json");
+    const item = findScholarshipById(list, id);
+
+    if (item === null) {
+      showDetailError();
+      return;
+    }
+
+    renderDetail(item);
+  } catch (err) {
+    showDetailError();
+  }
+}
+
 // 시작
 // 장학금 목록 화면 초기화
 async function initScholarshipPage() {
@@ -177,4 +293,11 @@ async function initScholarshipPage() {
   }
 }
 
-initScholarshipPage();
+// 현재 페이지에 맞는 화면만 시작 (홈: 목록 화면, 상세: 상세 화면)
+if (document.querySelector("#scholarship-list") !== null) {
+  initScholarshipPage();
+}
+
+if (document.querySelector("#scholarship-detail-content") !== null) {
+  initScholarshipDetailPage();
+}
