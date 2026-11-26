@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scholar Map | Review Detail</title>
+  </head>
+
+  <body>
+    <!-- 공통 Header -->
+    <div id="site-header"></div>
+
+    <main class="review-detail">
+      <!-- 리뷰 데이터 로딩 실패 시 표시 -->
+      <p id="review-detail-error" role="alert" hidden>Review information could not be loaded.</p>
+
+      <div id="review-detail-content">
+        <!-- 리뷰 게시글 -->
+        <article class="review-post">
+          <!-- 리뷰 제목 및 작성 정보 -->
+          <header class="review-post__header">
+            <h1 id="review-post-title">Review Title</h1>
+
+            <div class="review-post__meta">
+              <!-- 작성자 닉네임 -->
+              <p class="review-post__author">
+                Written by
+                <span id="review-post-nickname">Tom</span>
+              </p>
+
+              <!-- 작성 날짜 및 수정 날짜 -->
+              <div class="review-post__dates">
+                <span>
+                  Date :
+                  <time id="review-created-date" datetime="2026-10"> October 2026 </time>
+                </span>
+
+                <!-- 리뷰가 수정된 경우에만 표시 -->
+                <span id="review-edited-info" hidden>
+                  Edit :
+                  <time id="review-edited-date"></time>
+                </span>
+              </div>
+            </div>
+          </header>
+
+          <!-- 작성 정보와 본문 구분선 -->
+          <hr class="review-post__divider" />
+
+          <!-- 본인이 작성한 리뷰에만 표시 -->
+          <div id="review-post-actions" class="review-post__actions" hidden>
+            <button type="button" id="review-edit-button">EDIT</button>
+
+            <button type="button" id="review-delete-button">DELETE</button>
+          </div>
+
+          <!-- 장학금 관련 정보 -->
+          <dl class="review-post__information">
+            <div class="review-post__item">
+              <dt>Scholar name :</dt>
+              <dd id="review-scholarship-name">Scholarship Name</dd>
+            </div>
+
+            <div class="review-post__item">
+              <dt>Application Date :</dt>
+              <dd>
+                <time id="review-application-date" datetime="2026-10"> October 2026 </time>
+              </dd>
+            </div>
+
+            <div class="review-post__item">
+              <dt>Qualification :</dt>
+              <dd id="review-qualification">EWHA STUDENT</dd>
+            </div>
+
+            <div class="review-post__item">
+              <dt>Scholar Amount :</dt>
+              <dd id="review-amount">₩3,000,000</dd>
+            </div>
+          </dl>
+
+          <!-- 리뷰 본문 -->
+          <div id="review-post-body" class="review-post__body">
+            <p>Review content will be displayed here.</p>
+          </div>
+        </article>
+
+        <!-- 댓글 영역 -->
+        <section class="review-comments" aria-label="Comments">
+          <!-- 리뷰 본문과 댓글 영역 구분선 -->
+          <hr class="review-comments__divider" />
+
+          <!-- 로그인 회원에게만 표시 -->
+          <form id="review-comment-form" class="review-comment-form" hidden>
+            <textarea
+              id="review-comment-input"
+              name="comment"
+              placeholder="Enter your comment"
+              aria-label="Write a comment"
+              required
+            ></textarea>
+
+            <button type="submit" id="review-comment-add">ADD</button>
+          </form>
+
+          <!-- 댓글 목록 -->
+          <div id="review-comment-list" class="review-comment-list">
+            <!-- 예시 댓글 -->
+            <article class="review-comment">
+              <header class="review-comment__header">
+                <!-- 댓글 작성자 닉네임 -->
+                <span class="review-comment__nickname"> Scholar123 </span>
+
+                <!-- 본인이 작성한 댓글에만 표시 -->
+                <div class="review-comment__actions" hidden>
+                  <button type="button" class="review-comment__edit">EDIT</button>
+
+                  <button type="button" class="review-comment__delete">DELETE</button>
+                </div>
+              </header>
+
+              <!-- 댓글 내용 -->
+              <p class="review-comment__body">Thank you for sharing your experience!</p>
+
+              <!-- 수정된 댓글은 수정 날짜로 대체 -->
+              <div class="review-comment__meta">
+                <span>DATE</span>
+
+                <time class="review-comment__date" datetime="2026-11"> November 2026 </time>
+              </div>
+            </article>
+
+            <!-- JS에서 댓글 동적 렌더링 -->
+          </div>
+        </section>
+      </div>
+
+      <!-- 리뷰 및 댓글 삭제 확인 공통 모달 -->
+      <dialog
+        id="review-delete-dialog"
+        class="review-delete-dialog"
+        aria-labelledby="review-delete-message"
+      >
+        <p id="review-delete-message">Are you sure you want to delete it?</p>
+
+        <form method="dialog" class="review-delete-dialog__actions">
+          <button type="submit" id="review-delete-cancel" value="cancel">NO</button>
+
+          <button type="button" id="review-delete-confirm">YES</button>
+        </form>
+      </dialog>
+    </main>
+
+    <!-- 공통 Header 동적 렌더링 -->
+    <script type="module" src="/src/common/common.js"></script>
+  </body>
+</html>
