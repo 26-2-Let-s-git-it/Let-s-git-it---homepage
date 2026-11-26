@@ -1,0 +1,37 @@
+.team-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.member-card {
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+#goals {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .team-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #goals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #goals h2 {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .team-container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
