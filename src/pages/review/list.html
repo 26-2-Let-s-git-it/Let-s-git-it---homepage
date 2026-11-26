@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scholar Map | Scholarship Review</title>
+  </head>
+
+  <body>
+    <!-- 공통 Header -->
+    <div id="site-header"></div>
+
+    <main class="review-home">
+      <!-- 리뷰 검색 영역 -->
+      <section class="review-search" aria-labelledby="review-title">
+        <h1 id="review-title">Scholarship Review</h1>
+
+        <!-- 장학금 이름으로만 검색 -->
+        <form id="review-search-form" role="search">
+          <input
+            type="search"
+            id="review-keyword"
+            name="keyword"
+            placeholder="Enter the keyword"
+            aria-label="Search reviews by scholarship name"
+          />
+
+          <button type="submit" aria-label="Search reviews">
+            <span aria-hidden="true">⌕</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- 리뷰 작성 버튼 (로그인 회원만 표시) -->
+      <div class="review-actions">
+        <a
+          id="review-write-link"
+          class="review-write-link"
+          href="/src/pages/review/write.html"
+          hidden
+        >
+          GO TO WRITING
+        </a>
+      </div>
+
+      <!-- 리뷰 목록 영역 -->
+      <section class="review-results" aria-label="Scholarship reviews">
+        <!-- 검색 결과가 없을 때 표시 -->
+        <p id="review-empty-message" role="status" hidden>No Search Results were found</p>
+
+        <!-- JS에서 한 페이지당 최대 10개씩 동적 렌더링 -->
+        <div id="review-list" class="review-list">
+          <!-- 예시 리뷰 -->
+          <article class="review-item">
+            <h2 class="review-item__title">
+              <a href="/src/pages/review/detail.html?id=1" class="review-item__link">
+                Review Title
+              </a>
+            </h2>
+
+            <p class="review-item__scholarship">Scholarship Name</p>
+
+            <div class="review-item__meta">
+              <span class="review-item__nickname"> Nickname </span>
+
+              <time class="review-item__date" datetime="2026-11"> November 2026 </time>
+            </div>
+          </article>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <nav id="review-pagination" class="review-pagination" aria-label="Review pagination">
+          <button
+            type="button"
+            id="review-prev-page"
+            class="review-pagination__prev"
+            aria-label="Previous page"
+            disabled
+          >
+            &lt;
+          </button>
+
+          <!-- JS에서 전체 페이지 수에 따라 페이지 번호 생성 -->
+          <div id="review-page-numbers" class="review-pagination__numbers">
+            <button type="button" class="review-pagination__number" aria-current="page">1</button>
+          </div>
+
+          <button
+            type="button"
+            id="review-next-page"
+            class="review-pagination__next"
+            aria-label="Next page"
+            disabled
+          >
+            &gt;
+          </button>
+        </nav>
+      </section>
+    </main>
+
+    <!-- 공통 Header 동적 렌더링 -->
+    <script type="module" src="/src/common/common.js"></script>
+  </body>
+</html>
