@@ -1,0 +1,65 @@
+/* 공통 헤더 컨테이너 */
+.site-header {
+  width: 100%;
+  background-color: var(--color-surface-muted, #e5e7eb);
+}
+
+/* 헤더 내부 가로 배치 틀 */
+.site-header__inner {
+  max-width: var(--container-max, 1200px);
+  min-height: var(--header-height, 64px);
+  margin: 0 auto;
+  padding: 0 var(--space-6, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6, 24px);
+}
+
+/* 왼쪽: 로고 */
+.site-header__logo {
+  font-size: var(--font-size-xl, 24px);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-text-primary, #111827);
+  white-space: nowrap;
+}
+
+/* 가운데~우측: 주요 내비게이션 메뉴 */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8, 32px);
+  margin-left: auto;
+}
+
+.site-nav__link {
+  font-size: var(--font-size-md, 16px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-text-secondary, #6b7280);
+  white-space: nowrap;
+  padding-bottom: 2px;
+}
+
+/* 현재 선택된 메뉴 (와이어프레임의 Find Scholarships 스타일) */
+.site-nav__link.is-active {
+  color: var(--color-text-primary, #111827);
+  border-bottom: 2px solid var(--color-text-primary, #111827);
+}
+
+/* 오른쪽: 로그인 / 로그아웃 버튼 영역 */
+.site-header__auth {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  flex-shrink: 0;
+}
+
+.site-header__login,
+.site-header__logout {
+  padding: var(--space-3, 12px) var(--space-5, 20px);
+  background-color: var(--color-primary, #2e7d32);
+  color: var(--color-text-primary, #111827);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-bold, 700);
+  white-space: nowrap;
+}
