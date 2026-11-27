@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Scholar Map</title>
+  </head>
+
+  <body>
+    <!-- 공통 Header -->
+    <div id="site-header"></div>
+
+    <main class="login-page">
+      <!-- 로그인 카드 -->
+      <section class="login-card" aria-labelledby="login-title">
+        <h1 id="login-title" class="login-title">Sign In</h1>
+
+        <!-- 로그인 폼 -->
+        <form id="login-form" class="login-form" method="post">
+          <!-- ID 입력 -->
+          <div class="login-field">
+            <label for="login-id">ID</label>
+
+            <input
+              type="text"
+              id="login-id"
+              name="userId"
+              placeholder="Enter your ID"
+              autocomplete="username"
+              required
+            />
+          </div>
+
+          <!-- Password 입력 -->
+          <div class="login-field">
+            <label for="login-password">Password</label>
+
+            <input
+              type="password"
+              id="login-password"
+              name="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <!-- ID / Password 찾기 -->
+          <div class="login-recovery">
+            <a id="forgot-id-link" href="/src/pages/auth/forgot-id.html"> Forgot ID? </a>
+
+            <span aria-hidden="true">|</span>
+
+            <a id="forgot-password-link" href="/src/pages/auth/forgot-password.html">
+              Forgot Password?
+            </a>
+          </div>
+
+          <!-- 로그인 오류 메시지 -->
+          <p id="login-error" class="login-error" role="alert" hidden>Invalid ID or password.</p>
+
+          <!-- 로그인 버튼 -->
+          <button type="submit" id="login-submit" class="login-submit-button">LOGIN</button>
+        </form>
+
+        <!-- 회원가입 페이지 이동 -->
+        <a id="signup-link" class="login-signup-link" href="/src/pages/auth/register.html">
+          Sign Up
+        </a>
+      </section>
+    </main>
+
+    <!-- 공통 JS -->
+    <script type="module" src="/src/common/common.js"></script>
+  </body>
+</html>
