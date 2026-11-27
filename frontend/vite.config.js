@@ -8,5 +8,6 @@ export default defineConfig({
     reviewList: resolve(import.meta.dirname, "src/pages/review/list.html"),
     reviewDetail: resolve(import.meta.dirname, "src/pages/review/detail.html"),
     reviewWrite: resolve(import.meta.dirname, "src/pages/review/write.html"),
+    calendar: resolve(import.meta.dirname, "src/pages/calendar/calendar.html"),
   },
 });
