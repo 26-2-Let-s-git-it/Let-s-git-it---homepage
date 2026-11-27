@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up | Scholar Map</title>
+  </head>
+
+  <body>
+    <!-- 공통 Header -->
+    <div id="site-header"></div>
+
+    <main class="register-page">
+      <h1 class="register-title">Sign Up</h1>
+
+      <form id="register-form" class="register-form" method="post">
+        <!-- Account Information -->
+        <section class="register-section" aria-labelledby="account-title">
+          <h2 id="account-title" class="register-section__title">Account Information</h2>
+
+          <!-- Email -->
+          <div class="register-field">
+            <label for="register-email"> Email <span class="required-mark">*</span> </label>
+
+            <div class="register-input-group">
+              <input
+                type="email"
+                id="register-email"
+                name="email"
+                placeholder="Enter your email (e.g., name@example.com)"
+                autocomplete="email"
+                aria-describedby="register-email-error"
+                required
+              />
+
+              <p id="register-email-error" class="register-error" hidden>
+                Please enter your email address.
+              </p>
+            </div>
+          </div>
+
+          <!-- ID -->
+          <div class="register-field">
+            <label for="register-id"> ID <span class="required-mark">*</span> </label>
+
+            <div class="register-input-group">
+              <input
+                type="text"
+                id="register-id"
+                name="userId"
+                placeholder="Create an ID"
+                autocomplete="username"
+                aria-describedby="register-id-error"
+                required
+              />
+
+              <p id="register-id-error" class="register-error" hidden>Please enter your ID.</p>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="register-field">
+            <label for="register-password"> Password <span class="required-mark">*</span> </label>
+
+            <div class="register-input-group">
+              <input
+                type="password"
+                id="register-password"
+                name="password"
+                placeholder="Create a password (at least 8 characters)"
+                autocomplete="new-password"
+                minlength="8"
+                pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}"
+                aria-describedby="register-password-error"
+                required
+              />
+
+              <p id="register-password-error" class="register-error" hidden>
+                Please enter your password.
+              </p>
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="register-field">
+            <label for="register-confirm-password">
+              Confirm Password <span class="required-mark">*</span>
+            </label>
+
+            <div class="register-input-group">
+              <input
+                type="password"
+                id="register-confirm-password"
+                name="confirmPassword"
+                placeholder="Re-enter your password"
+                autocomplete="new-password"
+                aria-describedby="register-confirm-password-error"
+                required
+              />
+
+              <p id="register-confirm-password-error" class="register-error" hidden>
+                Please confirm your password.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Basic Information -->
+        <section class="register-section" aria-labelledby="basic-title">
+          <h2 id="basic-title" class="register-section__title">Basic Information</h2>
+
+          <!-- Nickname -->
+          <div class="register-field">
+            <label for="register-nickname"> Nickname <span class="required-mark">*</span> </label>
+
+            <div class="register-input-group">
+              <input
+                type="text"
+                id="register-nickname"
+                name="nickname"
+                placeholder="Enter a nickname (e.g., Scholar123)"
+                autocomplete="nickname"
+                aria-describedby="register-nickname-error"
+                required
+              />
+
+              <p id="register-nickname-error" class="register-error" hidden>
+                Please enter your nickname.
+              </p>
+            </div>
+          </div>
+
+          <!-- School / University -->
+          <div class="register-field">
+            <label for="register-school">School / University</label>
+
+            <div class="register-input-group">
+              <input
+                type="text"
+                id="register-school"
+                name="school"
+                placeholder="Enter your school or university name"
+              />
+            </div>
+          </div>
+
+          <!-- Major -->
+          <div class="register-field">
+            <label for="register-major">Major</label>
+
+            <div class="register-input-group">
+              <input
+                type="text"
+                id="register-major"
+                name="major"
+                placeholder="Enter your major (e.g., Computer Science, Business)"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Agreements -->
+        <section class="register-section register-agreements" aria-labelledby="agreements-title">
+          <h2 id="agreements-title" class="register-section__title">Agreements</h2>
+
+          <!-- 전체 동의 -->
+          <div class="agreement-row agreement-row--all">
+            <label for="agree-all">
+              <input type="checkbox" id="agree-all" />
+              Agree to All
+            </label>
+          </div>
+
+          <!-- 이용약관 동의 -->
+          <div class="agreement-row">
+            <label for="agree-terms">
+              <input type="checkbox" id="agree-terms" name="agreeTerms" required />
+              (Required) Terms of Service
+            </label>
+
+            <button
+              type="button"
+              id="view-terms"
+              class="agreement-detail-button"
+              aria-haspopup="dialog"
+              aria-controls="terms-dialog"
+            >
+              View details &gt;
+            </button>
+          </div>
+
+          <!-- 개인정보 처리방침 동의 -->
+          <div class="agreement-row">
+            <label for="agree-privacy">
+              <input type="checkbox" id="agree-privacy" name="agreePrivacy" required />
+              (Required) Privacy Policy
+            </label>
+
+            <button
+              type="button"
+              id="view-privacy"
+              class="agreement-detail-button"
+              aria-haspopup="dialog"
+              aria-controls="privacy-dialog"
+            >
+              View details &gt;
+            </button>
+          </div>
+        </section>
+
+        <!-- 회원가입 요청 오류 -->
+        <p id="register-submit-error" class="register-error" role="alert" hidden></p>
+
+        <!-- 회원가입 버튼 -->
+        <div class="register-actions">
+          <button type="submit" id="register-submit" class="register-submit-button">
+            Create Account
+          </button>
+        </div>
+      </form>
+
+      <!-- 로그인 페이지 이동 -->
+      <p class="register-login">
+        Already have an account?
+        <a href="/src/pages/auth/login.html">Log in</a>
+      </p>
+
+      <!-- 이용약관 모달 -->
+      <dialog id="terms-dialog" class="agreement-dialog" aria-labelledby="terms-dialog-title">
+        <h2 id="terms-dialog-title">Terms of Service</h2>
+
+        <div class="agreement-dialog__content">
+          <!-- 추후 실제 이용약관 내용 추가 -->
+          <p>Terms of Service content</p>
+        </div>
+
+        <form method="dialog" class="agreement-dialog__actions">
+          <button type="submit" id="terms-cancel" value="cancel">Cancel</button>
+
+          <button type="submit" id="terms-accept" value="agree">I Agree</button>
+        </form>
+      </dialog>
+
+      <!-- 개인정보 처리방침 모달 -->
+      <dialog id="privacy-dialog" class="agreement-dialog" aria-labelledby="privacy-dialog-title">
+        <h2 id="privacy-dialog-title">Privacy Policy</h2>
+
+        <div class="agreement-dialog__content">
+          <!-- 추후 실제 개인정보 처리방침 내용 추가 -->
+          <p>Privacy Policy content</p>
+        </div>
+
+        <form method="dialog" class="agreement-dialog__actions">
+          <button type="submit" id="privacy-cancel" value="cancel">Cancel</button>
+
+          <button type="submit" id="privacy-accept" value="agree">I Agree</button>
+        </form>
+      </dialog>
+    </main>
+
+    <!-- 공통 JS -->
+    <script type="module" src="/src/common/common.js"></script>
+  </body>
+</html>

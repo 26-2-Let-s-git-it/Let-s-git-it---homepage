@@ -10,5 +10,6 @@ export default defineConfig({
     reviewWrite: resolve(import.meta.dirname, "src/pages/review/write.html"),
     calendar: resolve(import.meta.dirname, "src/pages/calendar/calendar.html"),
     login: resolve(import.meta.dirname, "src/pages/auth/login.html"),
+    register: resolve(import.meta.dirname, "src/pages/auth/register.html"),
   },
 });
