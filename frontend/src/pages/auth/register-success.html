@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up Success | Scholar Map</title>
+  </head>
+
+  <body>
+    <!-- 공통 Header -->
+    <div id="site-header"></div>
+
+    <main class="register-success-page">
+      <!-- 회원가입 성공 카드 -->
+      <section class="register-success-card" aria-labelledby="register-success-title">
+        <!-- 성공 아이콘 -->
+        <div class="register-success-icon" aria-hidden="true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 64 64"
+            width="64"
+            height="64"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="32" cy="32" r="27" />
+            <path d="M20 32 L28 41 L45 23" />
+          </svg>
+        </div>
+
+        <!-- 회원가입 성공 메시지 -->
+        <h1 id="register-success-title" class="register-success-title">Welcome to ScholarMap!</h1>
+
+        <p class="register-success-message">Your account has been created successfully.</p>
+
+        <!-- 로그인 페이지 이동 -->
+        <a id="go-to-login" class="register-success-login-link" href="/src/pages/auth/login.html">
+          Go to Log In
+        </a>
+      </section>
+    </main>
+
+    <!-- 공통 JS -->
+    <script type="module" src="/src/common/common.js"></script>
+  </body>
+</html>
