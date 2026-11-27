@@ -155,6 +155,66 @@ function bindLogoutButton() {
   });
 }
 
+// 장학금 저장 (북마크)
+
+const SAVED_KEY = "scholarMap:saved"; // localStorage에 저장한 장학금 id 목록을 보관할 때 사용할 키
+const LOGIN_PAGE = "/src/pages/auth/login.html"; // 로그인 페이지 경로
+
+// 저장한 장학금 id 목록 가져오기 (로그인 전이거나 저장된 값이 없으면 빈 배열)
+export function getSavedIds() {
+  if (getUser() === null) {
+    return [];
+  }
+
+  try {
+    const saved = localStorage.getItem(SAVED_KEY);
+
+    if (saved === null) {
+      return [];
+    }
+
+    return JSON.parse(saved);
+  } catch (err) {
+    return [];
+  }
+}
+
+// 저장한 장학금인지 확인
+// id: 장학금 id (예: 3)
+export function isSaved(id) {
+  return getSavedIds().includes(`${id}`);
+}
+
+// 장학금 저장 상태 바꾸기 (저장됨 → 해제, 해제 → 저장)
+// 바뀐 뒤의 저장 여부(true / false)를 돌려주고, 로그인 전이거나 저장에 실패하면 null을 돌려줌
+// id: 장학금 id (예: 3)
+export function toggleSaved(id) {
+  if (getUser() === null) {
+    location.href = LOGIN_PAGE; // 비회원은 로그인 페이지로 이동
+    return null;
+  }
+
+  const savedId = `${id}`;
+  const ids = getSavedIds();
+  let next = [];
+
+  if (ids.includes(savedId)) {
+    next = ids.filter((item) => item !== savedId);
+  } else {
+    next = ids;
+    next[next.length] = savedId;
+  }
+
+  try {
+    localStorage.setItem(SAVED_KEY, JSON.stringify(next));
+  } catch (err) {
+    alert("저장 상태를 바꾸지 못했습니다.");
+    return null;
+  }
+
+  return next.includes(savedId);
+}
+
 // 시작
 // 공통 영역 불러오기, 로그인 상태 표시
 async function initCommon() {

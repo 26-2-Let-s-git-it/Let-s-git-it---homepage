@@ -1,7 +1,7 @@
 // src/pages/scholarship/scholarship.js
 // 홈 화면(장학금 목록)과 장학금 상세 화면 스크립트
 
-import { fetchJSON, formatNumber, formatDate } from "../../common/common.js"; // 공통 영역 불러오기 (header, footer)
+import { fetchJSON, formatNumber, formatDate, isSaved, toggleSaved } from "../../common/common.js"; // 공통 영역 불러오기 (header, footer)
 
 // 상태
 
@@ -165,6 +165,10 @@ function bindSearchForm() {
 
 // 상세
 
+// 선발 절차 단계 이름 규칙 (단계 이름 규칙이 정해지면 이 키워드만 수정)
+const INTERVIEW_KEYWORDS = ["면접", "interview"]; // 면접 일정으로 보여 줄 단계
+const RESULT_KEYWORDS = ["발표", "결과", "result", "announce"]; // 결과 발표 일정으로 보여 줄 단계
+
 // 주소(?id=3)에서 장학금 id 읽기 (없으면 null)
 function getScholarshipIdFromUrl() {
   const params = new URLSearchParams(location.search);
@@ -206,14 +210,14 @@ function createPeriodText(startAt, endAt) {
   return "-";
 }
 
-// 제출 서류 목록 HTML 만들기
-// documents: 제출 서류 이름 배열 (예: ["신청서", "성적증명서"])
-function createDocumentsHTML(documents) {
-  if (documents === null || documents === undefined || documents.length === 0) {
+// 항목 목록 HTML 만들기 (제출 서류, 기타 장학금 정보 등)
+// list: 글자 배열 (예: ["신청서", "성적증명서"])
+function createListHTML(list) {
+  if (list === null || list === undefined || list.length === 0) {
     return "<li>-</li>";
   }
 
-  return documents.map((name) => `<li>${name}</li>`).join("");
+  return list.map((text) => `<li>${text}</li>`).join("");
 }
 
 // 공식 공고 링크 연결 (링크가 없으면 숨김)
@@ -229,6 +233,120 @@ function renderOfficialLink(applyUrl) {
   }
 }
 
+// 선발 절차 단계 날짜 표시 (마감일만 있으면 그 날짜 하나만 표시)
+// startAt: 단계 시작 날짜, endAt: 단계 마감 날짜
+function createStepDateText(startAt, endAt) {
+  const hasStart = startAt !== null && startAt !== undefined;
+  const hasEnd = endAt !== null && endAt !== undefined;
+
+  if (hasStart && hasEnd) {
+    if (formatDate(startAt) === formatDate(endAt)) {
+      return formatDate(endAt);
+    }
+
+    return `${formatDate(startAt)} ~ ${formatDate(endAt)}`;
+  }
+
+  if (hasEnd) {
+    return formatDate(endAt);
+  }
+
+  if (hasStart) {
+    return formatDate(startAt);
+  }
+
+  return "-";
+}
+
+// 선발 절차 이름 표시 (예: "서류 심사 → 면접 → 최종 발표")
+// procedure: 선발 절차 배열 (예: [{ step: "면접", startAt: null, endAt: "2026-12-01" }])
+function createProcedureText(procedure) {
+  if (procedure === null || procedure === undefined || procedure.length === 0) {
+    return "-";
+  }
+
+  return procedure.map((item) => item.step).join(" → ");
+}
+
+// 단계 이름에 키워드가 들어 있는 선발 절차만 골라내기
+// procedure: 선발 절차 배열
+// keywords: 찾을 키워드 배열 (예: ["면접", "interview"])
+function findStepsByKeywords(procedure, keywords) {
+  if (procedure === null || procedure === undefined) {
+    return [];
+  }
+
+  return procedure.filter((item) => {
+    const name = item.step.toLowerCase();
+
+    for (let i = 0; i < keywords.length; i++) {
+      if (name.includes(keywords[i])) {
+        return true;
+      }
+    }
+
+    return false;
+  });
+}
+
+// 단계별 일정 HTML 만들기 (예: "1차 면접: 2026.12.01")
+// steps: 선발 절차 배열
+function createScheduleHTML(steps) {
+  if (steps.length === 0) {
+    return "-";
+  }
+
+  return steps
+    .map((item) => `${item.step}: ${createStepDateText(item.startAt, item.endAt)}`)
+    .join("<br>");
+}
+
+// 있는 화면 요소에만 HTML 넣기 (HTML에 아직 없는 구역은 건너뜀)
+// selector: 요소 선택자 (예: "#scholarship-result")
+// html: 넣을 HTML 글자
+function setHTMLIfExists(selector, html) {
+  const element = document.querySelector(selector);
+
+  if (element === null) {
+    return;
+  }
+
+  element.innerHTML = html;
+}
+
+// 북마크 별 모양 바꾸기
+// saved: 저장 여부 (true 또는 false)
+function renderBookmark(saved) {
+  const bookmark = document.querySelector("#scholarship-bookmark");
+
+  if (saved) {
+    bookmark.textContent = "★";
+    bookmark.setAttribute("aria-pressed", "true");
+  } else {
+    bookmark.textContent = "☆";
+    bookmark.setAttribute("aria-pressed", "false");
+  }
+}
+
+// 북마크 별 연결 (저장 여부 표시 + 클릭하면 저장 / 해제)
+// item: 장학금 데이터 객체
+function bindBookmark(item) {
+  const bookmark = document.querySelector("#scholarship-bookmark");
+
+  renderBookmark(isSaved(item.id));
+
+  bookmark.addEventListener("click", () => {
+    const saved = toggleSaved(item.id);
+
+    // 로그인 전이거나 저장에 실패하면 모양을 바꾸지 않음
+    if (saved === null) {
+      return;
+    }
+
+    renderBookmark(saved);
+  });
+}
+
 // 장학금 상세 화면 그리기
 // item: 장학금 데이터 객체
 function renderDetail(item) {
@@ -241,11 +359,29 @@ function renderDetail(item) {
     item.startAt,
     item.endAt
   );
-  document.querySelector("#scholarship-documents").innerHTML = createDocumentsHTML(
+  document.querySelector("#scholarship-documents").innerHTML = createListHTML(
     item.requiredDocuments
   );
+  document.querySelector("#scholarship-procedure").textContent = createProcedureText(
+    item.procedure
+  );
+
+  // 면접, 결과 발표 일정은 선발 절차에서 단계 이름으로 찾음
+  setHTMLIfExists(
+    "#scholarship-interview",
+    createScheduleHTML(findStepsByKeywords(item.procedure, INTERVIEW_KEYWORDS))
+  );
+  setHTMLIfExists(
+    "#scholarship-result",
+    createScheduleHTML(findStepsByKeywords(item.procedure, RESULT_KEYWORDS))
+  );
+  setHTMLIfExists("#scholarship-additional", createListHTML(item.additionalInfo));
 
   renderOfficialLink(item.applyUrl);
+
+  // 후기 링크에 장학금 id 붙이기 (이 장학금의 후기만 보기 위함)
+  const reviewLink = document.querySelector("#scholarship-review-link");
+  reviewLink.href = `${reviewLink.href}?scholarshipId=${item.id}`;
 }
 
 // 상세 화면 오류 표시 (장학금이 없거나 불러오지 못했을 때)
@@ -274,6 +410,7 @@ async function initScholarshipDetailPage() {
     }
 
     renderDetail(item);
+    bindBookmark(item);
   } catch (err) {
     showDetailError();
   }
