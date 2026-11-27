@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error | Scholar Map</title>
+  </head>
+
+  <body>
+    <!-- 공통 Header -->
+    <div id="site-header"></div>
+
+    <main class="error-page">
+      <!-- 오류 안내 카드 -->
+      <section class="error-card" aria-labelledby="error-title">
+        <!-- 오류 아이콘 -->
+        <div class="error-icon" aria-hidden="true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 64 64"
+            width="64"
+            height="64"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="32" cy="32" r="27" />
+            <path d="M32 17 V35" />
+            <circle cx="32" cy="44" r="2" fill="currentColor" stroke="none" />
+          </svg>
+        </div>
+
+        <!-- 오류 코드 -->
+        <p id="error-code" class="error-code" hidden></p>
+
+        <!-- 오류 제목 -->
+        <h1 id="error-title" class="error-title">Something went wrong.</h1>
+
+        <!-- 오류 메시지 -->
+        <p id="error-message" class="error-message">
+          An unexpected error occurred. Please try again later.
+        </p>
+
+        <!-- 홈 화면 이동 -->
+        <a id="error-home-link" class="error-home-link" href="/src/pages/index.html">
+          GO TO HOME
+        </a>
+      </section>
+    </main>
+
+    <!-- 공통 JS -->
+    <script type="module" src="/src/common/common.js"></script>
+  </body>
+</html>
