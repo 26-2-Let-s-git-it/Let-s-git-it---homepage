@@ -1,0 +1,12 @@
+import { defineConfig } from "vite";
+import { resolve } from "node:path";
+
+export default defineConfig({
+  input: {
+    home: resolve(import.meta.dirname, "src/pages/index.html"),
+    scholarshipDetail: resolve(import.meta.dirname, "src/pages/scholarship/detail.html"),
+    reviewList: resolve(import.meta.dirname, "src/pages/review/list.html"),
+    reviewDetail: resolve(import.meta.dirname, "src/pages/review/detail.html"),
+    reviewWrite: resolve(import.meta.dirname, "src/pages/review/write.html"),
+  },
+});
