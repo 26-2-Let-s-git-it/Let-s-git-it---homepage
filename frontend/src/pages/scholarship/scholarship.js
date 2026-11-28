@@ -381,7 +381,7 @@ function renderDetail(item) {
 
   // 후기 링크에 장학금 id 붙이기 (이 장학금의 후기만 보기 위함)
   const reviewLink = document.querySelector("#scholarship-review-link");
-  reviewLink.href = `${reviewLink.href}?scholarshipId=${item.id}`;
+  reviewLink.href = `${reviewLink.href}?scholarship=${item.id}`;
 }
 
 // 상세 화면 오류 표시 (장학금이 없거나 불러오지 못했을 때)

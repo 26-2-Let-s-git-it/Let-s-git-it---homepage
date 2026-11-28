@@ -100,6 +100,18 @@ export function getUser() {
   }
 }
 
+// 로그인 상태에서 액세스 토큰 가져오기 (로그인 전이면 null)
+// 로그인 성공 시 서버가 준 응답 전체({ accessToken, refreshToken, user })를 setUser로 저장한다는 전제
+export function getAccessToken() {
+  const user = getUser();
+
+  if (user === null || user.accessToken === undefined) {
+    return null;
+  }
+
+  return user.accessToken;
+}
+
 // 로그인 상태 저장
 export function setUser(user) {
   try {
